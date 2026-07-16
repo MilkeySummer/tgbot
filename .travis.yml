@@ -1,4 +1,10 @@
 language: java
 jdk:
   - openjdk21
-script: mvn clean install -DskipTests
+
+cache:
+  directories:
+    - ~/.m2
+
+script:
+  - mvn clean install -DskipTests=true -B -V
