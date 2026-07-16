@@ -1,4 +1,4 @@
 language: java
 jdk:
-  -openjdk21
+  - openjdk21
 script: mvn clean install -DskipTests
