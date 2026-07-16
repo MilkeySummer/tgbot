@@ -2,9 +2,5 @@ language: java
 jdk:
   - openjdk21
 
-cache:
-  directories:
-    - ~/.m2
-
 script:
   - mvn clean install -DskipTests=true -B -V
