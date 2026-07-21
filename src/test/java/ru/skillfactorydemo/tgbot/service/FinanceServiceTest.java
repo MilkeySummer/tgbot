@@ -9,11 +9,6 @@ import ru.skillfactorydemo.tgbot.entity.Spend;
 import ru.skillfactorydemo.tgbot.repository.IncomeRepository;
 import ru.skillfactorydemo.tgbot.repository.SpendRepository;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -28,39 +23,32 @@ class FinanceServiceTest {
     private IncomeRepository incomeRepository;
 
     private FinanceService financeService;
-    private long testStartTime;
 
     @BeforeEach
     public void setUp() {
         financeService = new FinanceService(incomeRepository, spendRepository);
-        testStartTime = System.nanoTime(); // Наносекунды для более точного замера
-
-        // Красивое форматирование времени
-        String formattedTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss.SSS"));
-        System.out.println("⏰ Тест начат в: " + formattedTime);
+        System.out.println("⏰ Test started at: " + System.currentTimeMillis());
     }
 
     @AfterEach
     public void tearDown() {
-        long duration = System.nanoTime() - testStartTime;
-        double millis = duration / 1_000_000.0;
-
-        String formattedTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss.SSS"));
-        System.out.println("⏰ Тест завершен в: " + formattedTime);
-        System.out.println("⏱️  Длительность: " + String.format("%.2f", millis) + " мс");
+        System.out.println("⏰ Test finished at: " + System.currentTimeMillis());
         System.out.println("----------------------------------------");
     }
 
     @DisplayName("ADD_INCOME_test - проверка добавления дохода")
     @Test
     public void addFinanceOperationAddIncomeTest() {
+        // given
         when(incomeRepository.save(any(Income.class))).thenReturn(new Income());
 
         String price = "150.0";
         Long chatId = 500L;
 
+        // when
         String message = financeService.addFinanceOperation("/addincome", price, chatId);
 
+        // then
         Assertions.assertEquals("Доход в размере " + price + " был успешно добавлен", message);
         verify(incomeRepository, times(1)).save(any(Income.class));
         verify(spendRepository, never()).save(any(Spend.class));
@@ -69,13 +57,16 @@ class FinanceServiceTest {
     @DisplayName("non_ADD_INCOME_test - проверка добавления расхода")
     @Test
     public void addFinanceOperationElseBranchTest() {
+        // given
         when(spendRepository.save(any(Spend.class))).thenReturn(new Spend());
 
         String price = "200.0";
         Long chatId = 250L;
 
+        // when
         String message = financeService.addFinanceOperation("/nan", price, chatId);
 
+        // then
         Assertions.assertEquals("Расход в размере " + price + " был успешно добавлен", message);
         verify(spendRepository, times(1)).save(any(Spend.class));
         verify(incomeRepository, never()).save(any(Income.class));
@@ -84,13 +75,16 @@ class FinanceServiceTest {
     @DisplayName("ADD_INCOME_case_insensitive - проверка регистронезависимости")
     @Test
     public void addFinanceOperationCaseInsensitiveTest() {
+        // given
         when(incomeRepository.save(any(Income.class))).thenReturn(new Income());
 
         String price = "300.0";
         Long chatId = 100L;
 
+        // when
         String message = financeService.addFinanceOperation("/ADDINCOME", price, chatId);
 
+        // then
         Assertions.assertEquals("Доход в размере " + price + " был успешно добавлен", message);
         verify(incomeRepository, times(1)).save(any(Income.class));
         verify(spendRepository, never()).save(any(Spend.class));
@@ -99,23 +93,16 @@ class FinanceServiceTest {
     @DisplayName("invalid_price_test - проверка обработки неверного формата цены")
     @Test
     public void addFinanceOperationInvalidPriceTest() {
+        // given
         String invalidPrice = "abc";
         Long chatId = 500L;
 
+        // when & then
         Assertions.assertThrows(NumberFormatException.class, () -> {
             financeService.addFinanceOperation("/addincome", invalidPrice, chatId);
         });
 
         verify(incomeRepository, never()).save(any());
         verify(spendRepository, never()).save(any());
-    }
-
-    // Дополнительный тест, который показывает, как выглядит "медленный" тест
-    @DisplayName("slow_test_demo - демонстрация замедления")
-    @Test
-    public void slowTestDemo() throws InterruptedException {
-        // Имитируем "медленный" тест (например, с реальной БД или API)
-        Thread.sleep(100); // 100 миллисекунд задержки
-        Assertions.assertTrue(true);
     }
 }
