@@ -2,15 +2,18 @@ package ru.skillfactorydemo.tgbot.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.skillfactorydemo.tgbot.dto.ValuteCursOnDate;
+import ru.skillfactorydemo.tgbot.entity.Spend;
 import ru.skillfactorydemo.tgbot.service.CentralRussianBankService;
 import ru.skillfactorydemo.tgbot.service.StatsService;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -29,5 +32,13 @@ public class CurrencyController {
     @Operation(summary = "Получение количества пополнений, которые превышают определенную сумму")
     public int getStatsAboutIncomesThatGreater(@RequestParam(value = "amount")BigDecimal amount){
         return statsService.getCountOfIncomesThatGreater(amount);
+    }
+    @GetMapping("/getExpensesAbove")
+    @Operation(summary = "Получение расходов выше суммы за период")
+    public List<Spend> getExpensesAbove(
+            @RequestParam("from") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
+            @RequestParam("to") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to,
+            @RequestParam("amount") BigDecimal amount) {
+        return statsService.getExpensesAboveAmount(from, to, amount);
     }
 }

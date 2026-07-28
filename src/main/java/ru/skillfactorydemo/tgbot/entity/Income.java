@@ -1,4 +1,5 @@
 package ru.skillfactorydemo.tgbot.entity;
+import java.time.LocalDate;
 
 import lombok.Data;
 
@@ -19,4 +20,7 @@ public class Income {
 
     @Column(name = "INCOME")
     private BigDecimal income;
+
+    @Column(name = "operation_date")
+    private LocalDate operationDate;
 }

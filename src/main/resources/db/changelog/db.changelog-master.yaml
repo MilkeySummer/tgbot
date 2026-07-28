@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - changeSet:
+      id: add-date-columns
+      author: your-name
+      changes:
+        - addColumn:
+            tableName: INCOMES
+            columns:
+              - column:
+                  name: operation_date
+                  type: date
+                  defaultValueComputed: CURRENT_DATE
+                  constraints:
+                    nullable: false
+        - addColumn:
+            tableName: SPEND
+            columns:
+              - column:
+                  name: operation_date
+                  type: date
+                  defaultValueComputed: CURRENT_DATE
+                  constraints:
+                    nullable: false
