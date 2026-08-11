@@ -2,7 +2,6 @@ package ru.skillfactorydemo.tgbot.repository;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-// ПРАВИЛЬНЫЕ ИМПОРТЫ:
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import ru.skillfactorydemo.tgbot.entity.Income;
