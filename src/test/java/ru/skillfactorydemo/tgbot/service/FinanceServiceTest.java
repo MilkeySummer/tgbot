@@ -2,6 +2,7 @@ package ru.skillfactorydemo.tgbot.service;
 
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.skillfactorydemo.tgbot.entity.Income;
@@ -22,6 +23,7 @@ class FinanceServiceTest {
     @Mock
     private IncomeRepository incomeRepository;
 
+    @InjectMocks
     private FinanceService financeService;
 
     @BeforeEach
